@@ -13,7 +13,7 @@ The docker images are published via Docker Hub:
 ## Supported Architectures
 
 - ARM 64-bit (`arm64`)
-- Intel/AMD 64-bit (`amd64`/`x64`)
+- Intel/AMD 64-bit (`amd64`/`x86_64`)
 
 ---
 
