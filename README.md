@@ -1,4 +1,4 @@
-# Docker Container for HomeSeer (Linux)
+# Docker Container for HomeSeer 4 (Linux)
 ---
 
 ## Overview
