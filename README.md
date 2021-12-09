@@ -24,6 +24,18 @@ The docker images are published via Docker Hub:
 
 ---
 
+## TL;DR
+
+Command to launch Docker container:
+```
+docker run -it --name homeseer \       
+       -p 80:80 -p 10200:10200 -p 10300:10300 -p 10401:10401 -p 11000:11000 \
+       -v /etc/homeseer:/homeseer \
+       homeseer/homeseer:latest
+```
+
+---
+
 ## Supported Architectures
 
 - ARM 64-bit ( `arm64` )
