@@ -1,4 +1,12 @@
+[![Docker](https://img.shields.io/docker/v/homeseer/homeseer/latest?color=darkgreen&label=DockerHub%20Latest%20Image)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
+[![Docker](https://img.shields.io/docker/v/homeseer/homeseer/beta?color=red&label=DockerHub%20Beta%20Image)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
+
 # Docker Container for HomeSeer 4 (Linux)
+
+(Developed with ♥ by SavageSoftware, LLC.)
+
+> :bomb:  This repository and container image are considered `EXPERIMENTAL` at this time.  We are not responsible for any data lost or systems corrupted!
+
 ---
 
 ## Overview
@@ -12,8 +20,8 @@ The docker images are published via Docker Hub:
 
 ## Supported Architectures
 
-- ARM 64-bit (`arm64`)
-- Intel/AMD 64-bit (`amd64`/`x86_64`)
+- ARM 64-bit ( `arm64` )
+- Intel/AMD 64-bit ( `amd64` / `x86_64` )
 
 ---
 
