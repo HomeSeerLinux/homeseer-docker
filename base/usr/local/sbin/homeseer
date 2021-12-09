@@ -1,0 +1,256 @@
+#!/bin/bash -e
+
+#################################################
+# HOMESEER (V4) LINUX - CONTAINER RUNTIME SCRIPT
+#################################################
+
+# -------------------------------------------------------------------------
+# INSTALL HOMESEER
+# -------------------------------------------------------------------------
+# 'install' will overwrite the "/homeseer" directory contents with
+# application files from the embedded archive file included in this
+# container at ('/homeseer.tar.gz')
+# -------------------------------------------------------------------------
+function install_homeseer {
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - INSTALLING HOMESEER"
+  echo "**********************************************************************"
+  echo
+
+  # extract the HomeSeer application file from the embedded archive file in the container
+  echo "Installing HomeSeer application files; please wait ..."
+  tar --strip-components=1 -xzvf /homeseer.tar.gz -C /homeseer
+
+  # write a flagging file to denote that we have installed the HomeSeer application in this container
+  touch /homeseer-installed
+
+  # remove unnecessary files from the HomeSeer application directory
+  rm -f /homeseer/hs_sentry.log
+
+  # copy updated (override) restart & shutdown command scripts for HomeSeer
+  cp -r /scripts/restart.sh /homeseer/restart.sh
+  cp -r /scripts/shutdown.sh /homeseer/shutdown.sh
+  cp -r /scripts/shutdown_controller.sh /homeseer/shutdown_controller.sh
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - HOMESEER INSTALL COMPLETE"
+  echo "**********************************************************************"
+  echo
+}
+
+# -------------------------------------------------------------------------
+# INITIALIZE HOMESEER
+# -------------------------------------------------------------------------
+# 'initialize' will setup the system timezone and start the DBUS and AVAHI
+# daemon (initialization only occurs one time at container startup)
+# -------------------------------------------------------------------------
+function initialize_homeseer {
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - IP ADDRESS"
+  echo "**********************************************************************"
+  echo
+  ifconfig eth0
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - SET TIME ZONE: $TZ"
+  echo "**********************************************************************"
+  echo
+  TZ="${TZ:=America/New_York}"
+  LANG="${LANG:=en_US.UTF-8}"
+  export LANG=$LANG
+  export TZ=$TZ
+  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+  dpkg-reconfigure --frontend noninteractive tzdata
+  update-locale LANG=$LANG
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - STARTING DBUS DAEMON"
+  echo "**********************************************************************"
+  echo
+
+  # stop any existing DBUS daemon processes
+  killall -vq dbus-daemon || true;
+
+  # delete existing pid if found
+  [ -e /var/run/dbus.pid ] && rm -f /var/run/dbus.pid
+  [ -e /var/run/dbus/pid ] && rm -f /var/run/dbus/pid
+
+  # This will ensure that /var/lib/dbus/machine-id exists and has the uuid in it.
+  # It won't overwrite an existing uuid, since this id should remain fixed for a
+  # single machine until the next reboot at least.  The important properties of
+  # the machine UUID are that (1) it remains unchanged until the next reboot
+  # and (2) it is different for any two running instances of the OS kernel.
+  dbus-uuidgen --ensure
+  echo " -> DBUS UUID generated: `cat /var/lib/dbus/machine-id`"
+  sleep 1
+
+  # launch DBUS as a background task and redirect STDOUT & STDERR to NULL
+  dbus-daemon --system --nofork 2>/dev/null &
+  DBUS_PID=$!
+  echo " -> DBUS Daemon started in background (PID=$DBUS_PID)"
+  ps -A | grep dbus-daemon
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - STARTING AVAHI DAEMON"
+  echo "**********************************************************************"
+  echo
+
+  # stop any existing AVAHI daemon processes
+  killall -vq avahi-daemon || true;
+
+  # delete existing pid if found
+  [ -e /var/run/avahi-daemon/pid ] && rm -f /var/run/avahi-daemon/pid
+
+  # fix avahi config for synology dsm
+  if [ ! -z "$DSM_HOSTNAME" ]; then
+    echo " -> AVAHI configuration file updated for Synology DSM_HOSTNAME: ${DSM_HOSTNAME}"
+    sed -i "s/.*host-name.*/host-name=${DSM_HOSTNAME}/" /etc/avahi/avahi-daemon.conf
+  else
+    sed -i "s/.*host-name.*/#host-name=/" /etc/avahi/avahi-daemon.conf
+  fi
+  echo " -> AVAHI configuration file updated: /etc/avahi/avahi-daemon.conf"
+
+  # launch AVAHI as a background task and redirect STDOUT & STDERR to NULL
+  avahi-daemon --no-chroot -f /etc/avahi/avahi-daemon.conf 2>/dev/null &
+  AVAHI_PID=$!
+  echo " -> AVAHI Daemon started in background (PID=$AVAHI_PID)"
+  ps -A | grep avahi-daemon
+}
+
+# -------------------------------------------------------------------------
+# START (OR RESTART) HOMESEER
+# -------------------------------------------------------------------------
+function start_homeseer {
+
+  # handle restarts if needed
+  if [ -f "/homeseer-restart" ]; then
+    echo
+    echo "**********************************************************************"
+    echo " HOMESEER CONTAINER - RESTARTING HOMESEER"
+    echo "**********************************************************************"
+    echo
+    rm -f /homeseer-restart
+  else
+    echo
+    echo "**********************************************************************"
+    echo " HOMESEER CONTAINER - STARTING HOMESEER"
+    echo "**********************************************************************"
+    echo
+  fi
+
+  # make sure we are in the /homeseer working directory
+  cd /homeseer
+
+  # start the .NET Homeseer application (via mono)
+  mono HSConsole.exe --log
+}
+
+# -------------------------------------------------------------------------
+# STOP HOMESEER
+# -------------------------------------------------------------------------
+# stop homeseer now; the mono process has already exited we just need
+# to stop any other daemons/processes and perform any cleanup
+# -------------------------------------------------------------------------
+function stop_homeseer {
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - STOPPING AVAHI DAEMON"
+  echo "**********************************************************************"
+  echo
+  killall -vq avahi-daemon || true; # stop the AVAHI daemon process
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - STOPPING DBUS DAEMON"
+  echo "**********************************************************************"
+  echo
+  killall -vq dbus-daemon || true;  # stop the DBUS daemon process
+
+}
+
+# ---------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------
+
+echo
+echo "**********************************************************************"
+echo " HOMESEER CONTAINER - STARTUP"
+echo "**********************************************************************"
+echo
+
+# install HomeSeer if not already installed by this container instance
+# (the "/homeseer-installed" file is written after installation)
+if [[ ! -f "/homeseer-installed" ]] && [ ! -f "/homeseer/no-install" ]; then
+  echo "Homeseer is not installed in this container; install it now."
+  # 'install' will overwrite the "/homeseer" directory contents with
+  # application files from the embedded archive file included in this
+  # container at ('/homeseer.tar.gz')
+  install_homeseer;
+else
+  echo "Homeseer is already installed in this container."
+fi
+
+echo
+echo "**********************************************************************"
+echo " HOMESEER CONTAINER - INITIALIZE"
+echo "**********************************************************************"
+echo
+ps -A | grep homeseer
+
+# 'initialize' will setup the system timezone and start the DBUS and AVAHI daemon
+# (initialization only occurs one time at container startup)
+initialize_homeseer;
+
+# initial runtime counter value
+RunCounter=0;
+
+# program runtime loop; handles software initiated restarts/reboots/updates
+# continuous loop while ...
+# (1) RunCounter=0; this denoted the first run after container startup
+# (2) if a restart flag file exists on the root directory ("/homeseer-restart")
+# (3) or if an update file exists in the homeseer directory ("/homeseer/hs4_sel*")
+while [[ RunCounter -eq 0 ]] || [[ -f "/homeseer-restart" ]] || [[ "`echo /homeseer/hs4_sel*`" != "/homeseer/hs4_sel*" ]]
+do
+   # if an update file exists; then wait for it to be removed by the updater
+   while [[ "`echo /homeseer/hs4_sel*`" != "/homeseer/hs4_sel*" ]]
+   do
+     echo "------------- WAITING FOR HOMESEER UPDATE TO COMPLETE"
+     sleep 10;
+   done
+
+   ((RunCounter=RunCounter+1))  # increment runtime counter
+   start_homeseer;              # start (or restart) homeseer
+   sleep 2;
+done
+
+
+echo
+echo "**********************************************************************"
+echo " HOMESEER CONTAINER - STOPPING"
+echo "**********************************************************************"
+echo
+
+# stop homeseer now; the mono process has already exited we just need
+# to stop any other daemons/processes and perform any cleanup
+stop_homeseer;
+
+echo
+echo "**********************************************************************"
+echo " HOMESEER CONTAINER - EXITING"
+echo "**********************************************************************"
+echo
+echo "GOODBYE"
+echo
+
+# GOODBYE
