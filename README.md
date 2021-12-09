@@ -1,5 +1,5 @@
-[![Docker](https://img.shields.io/docker/v/homeseer/homeseer/latest?color=darkgreen&label=DockerHub%20Latest%20Image)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
-[![Docker](https://img.shields.io/docker/v/homeseer/homeseer/beta?color=red&label=DockerHub%20Beta%20Image)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
+[![Docker](https://img.shields.io/docker/v/homeseer/homeseer/latest?color=darkgreen&logo=docker&label=DockerHub%20Latest%20Image)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
+[![Docker](https://img.shields.io/docker/v/homeseer/homeseer/beta?color=red&logo=docker&label=DockerHub%20Beta%20Image)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
 
 # Docker Container for HomeSeer 4 (Linux)
 
@@ -15,6 +15,8 @@ This project provides Docker container images for HomeSeer 4 on Linux.
 
 The docker images are published via Docker Hub:
  - [https://hub.docker.com/repository/docker/homeseer/homeseer](https://hub.docker.com/repository/docker/homeseer/homeseer)
+ - [![Docker](https://img.shields.io/docker/v/homeseer/homeseer/latest?label=DockerHub%20Latest%20Image&logo=docker&style=social)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
+ - [![Docker](https://img.shields.io/docker/v/homeseer/homeseer/beta?label=DockerHub%20Beta%20Image&logo=docker&style=social)](https://hub.docker.com/repository/docker/homeseer/homeseer/)
 
 ---
 
