@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 ############################################
-# HOMESEER (V4) LINUX - REBOOT SCRIPT
+# HOMESEER (V4) LINUX - RESTART SCRIPT
 ############################################
 
 echo

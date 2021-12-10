@@ -50,7 +50,6 @@ The following docker command will download and launch the latest HomeSeer 4 Dock
 docker run \
        --interactive \
        --tty \
-       --restart always \
        --name homeseer \
        --volume /etc/homeseer:/homeseer \
        --publish 80:80 \

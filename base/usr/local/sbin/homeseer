@@ -87,7 +87,7 @@ function initialize_homeseer {
   # single machine until the next reboot at least.  The important properties of
   # the machine UUID are that (1) it remains unchanged until the next reboot
   # and (2) it is different for any two running instances of the OS kernel.
-  dbus-uuidgen --ensure
+  dbus-uuidgen --ensure || true
   echo " -> DBUS UUID generated: `cat /var/lib/dbus/machine-id`"
   sleep 1
 
@@ -95,7 +95,7 @@ function initialize_homeseer {
   dbus-daemon --system --nofork 2>/dev/null &
   DBUS_PID=$!
   echo " -> DBUS Daemon started in background (PID=$DBUS_PID)"
-  ps -A | grep dbus-daemon
+  ps -A | grep dbus-daemon || true
 
   echo
   echo "**********************************************************************"
@@ -122,7 +122,7 @@ function initialize_homeseer {
   avahi-daemon --no-chroot -f /etc/avahi/avahi-daemon.conf 2>/dev/null &
   AVAHI_PID=$!
   echo " -> AVAHI Daemon started in background (PID=$AVAHI_PID)"
-  ps -A | grep avahi-daemon
+  ps -A | grep avahi-daemon || true
 }
 
 # -------------------------------------------------------------------------
@@ -150,7 +150,34 @@ function start_homeseer {
   cd /homeseer
 
   # start the .NET Homeseer application (via mono)
-  mono HSConsole.exe --log
+  # (run the homeseer process in the background so that we can monitor signals to terminate)
+  mono HSConsole.exe --log &
+  HOMESEER_PID=$!
+
+  # MONITOR TERMINATION SIGNALS
+  #  1       HUP  (hang up)
+  #  2       INT  (interrupt)
+  #  3       QUIT (quit)
+  #  6       ABRT (abort)
+  #  15      TERM (software termination signal)
+  trap 'echo "---> SIGHUP DETECTED";  stop_homeseer; exit 0;' SIGHUP
+  trap 'echo "---> SIGINT DETECTED";  stop_homeseer; exit 0;' SIGINT
+  trap 'echo "---> SIGQUIT DETECTED"; stop_homeseer; exit 0;' SIGQUIT
+  trap 'echo "---> SIGABRT DETECTED"; stop_homeseer; exit 0;' SIGABRT
+  trap 'echo "---> SIGTERM DETECTED"; stop_homeseer; exit 0;' SIGTERM
+
+  # continuous loop waiting for a termination signal
+  # of exit if the homeseer mono process has terminated/shutdown on its own
+  while true
+  do
+    # check to see if the homeseer process is still running in the background
+    if [ -d "/proc/${HOMESEER_PID}" ]; then
+      sleep 2; # homeseer mono process is still running
+    else
+      echo "--> HOMESEER PROCESS HAS TERMINATED." ;
+      break;   # homeseer mono process has terminated
+    fi
+  done
 }
 
 # -------------------------------------------------------------------------
@@ -160,6 +187,60 @@ function start_homeseer {
 # to stop any other daemons/processes and perform any cleanup
 # -------------------------------------------------------------------------
 function stop_homeseer {
+
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - STOPPING HOMESEER PROCESS"
+  echo "**********************************************************************"
+  echo
+  CURL_ERROR=0;
+
+  # extract web server port from settings.ini
+  HOMESEER_PORT=$(awk -F= '\
+  {
+      gsub("\015", "") # remove CR character
+      if ($1 == "gWebSvrPort") print $2
+  }
+  ' /homeseer/Config/settings.ini)
+
+  # send application shutdown command (attempt the API call up to 5 times)
+  for i in $(seq 1 5)
+  do
+      echo "--> CALLING SHUTDOWN API ON HOMESEER SERVER PORT: $HOMESEER_PORT"
+      CURL_ERROR=0;
+      curl -f -s -o /dev/null ${HOMESEER_CREDENTIALS:+-u} $HOMESEER_CREDENTIALS --data 'ConfirmShutdownhs=Yes' "http://localhost:$HOMESEER_PORT/LinuxTools" || CURL_ERROR=$?;
+      test $CURL_ERROR -eq 0 && break
+      echo "--> [$i] SHUTDOWN API CALL FAILED WITH ERROR: $CURL_ERROR; RETRYING IN 2 SECONDS"
+      sleep 2
+  done
+
+  # if the API call failed, the we should directly kill the homeseer mono process;
+  # this will result in an unclean termination but its the best we can do if the API call fails.
+  if [[ CURL_ERROR -ne 0 ]]; then
+    echo "--> UNABLE TO CALL SHUTDOWN API ON HOMESEER SERVER; KILLING HOMESEER PROCESS [$HOMESEER_PID]"
+    test -n "$HOMESEER_PID" && kill -0 $HOMESEER_PID && kill $HOMESEER_PID
+  fi;
+
+  # wait until the homeseer mono process has been terminated
+  # (timeout after one minute of waiting)
+  for (( t=0; t<30; t+=2 ))
+  do
+      pgrep -af mono.'*'\(HSConsole\|HomeSeer\) || break
+      echo "--> WAITING FOR HOMESEER TO SHUTDOWN";
+      sleep 2; # two seconds
+  done
+
+  # with homeseer mono process terminated; we are ready to clean up and exit
+  exit_homeseer;
+}
+
+# -------------------------------------------------------------------------
+# EXIT HOMESEER
+# -------------------------------------------------------------------------
+# exit homeseer now; the mono process has already exited we just need
+# to stop any other daemons/processes and perform any cleanup
+# -------------------------------------------------------------------------
+function exit_homeseer {
 
   echo
   echo "**********************************************************************"
@@ -175,6 +256,16 @@ function stop_homeseer {
   echo
   killall -vq dbus-daemon || true;  # stop the DBUS daemon process
 
+  echo
+  echo "**********************************************************************"
+  echo " HOMESEER CONTAINER - EXITING"
+  echo "**********************************************************************"
+  echo
+  echo "GOODBYE!"
+  echo
+
+  # exit with success code
+  exit 0;
 }
 
 # ---------------------------------------------------------------------------------------------------
@@ -187,6 +278,8 @@ echo
 echo "**********************************************************************"
 echo " HOMESEER CONTAINER - STARTUP"
 echo "**********************************************************************"
+echo
+echo "PRESS CTRL-C TO SHUTDOWN; OR USE 'docker stop homeseer' COMMAND."
 echo
 
 # install HomeSeer if not already installed by this container instance
@@ -231,7 +324,7 @@ do
 
    ((RunCounter=RunCounter+1))  # increment runtime counter
    start_homeseer;              # start (or restart) homeseer
-   sleep 2;
+   sleep 1;
 done
 
 
@@ -241,16 +334,9 @@ echo " HOMESEER CONTAINER - STOPPING"
 echo "**********************************************************************"
 echo
 
-# stop homeseer now; the mono process has already exited we just need
+# exit homeseer now; the mono process has already exited we just need
 # to stop any other daemons/processes and perform any cleanup
-stop_homeseer;
-
-echo
-echo "**********************************************************************"
-echo " HOMESEER CONTAINER - EXITING"
-echo "**********************************************************************"
-echo
-echo "GOODBYE"
-echo
+exit_homeseer;
 
 # GOODBYE
+exit 0

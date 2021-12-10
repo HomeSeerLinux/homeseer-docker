@@ -6,7 +6,6 @@
 docker run \
        --interactive \
        --tty \
-       --restart always \
        --name homeseer \
        --volume /etc/homeseer:/homeseer \
        --publish 80:80 \
@@ -16,6 +15,7 @@ docker run \
        --publish 11000:11000 \
        --env TZ=America/New_York \
        --env LANG=en_US.UTF-8 \
+       --env HOMESEER_CREDENTIALS="default:default" \
        homeseer/homeseer:latest $@
 
 # PUBLISHED IP PORTS
@@ -29,6 +29,7 @@ docker run \
 # OTHER COMMON OPTIONS
 # -------------------------
 # --detach
+# --restart always
 # --device /dev/ttyUSB0
 # --device /dev/ttyUSB1
 # --device /dev/ttyACM0

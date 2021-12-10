@@ -9,10 +9,14 @@ ARG BUILDDATE
 ARG VERSION
 ARG DEBIAN_FRONTEND=noninteractive
 
+# custom STOP signal for 'docker stop'
+STOPSIGNAL SIGQUIT
+
 # environment variables
 ENV LANG en_US.UTF-8
 ENV TZ "America/New_York"
-ENV HOMESEER_FOLDER=/homeseer
+ENV HOMESEER_FOLDER "/homeseer"
+ENV HOMESEER_CREDENTAILS ""
 
 # docker container image labels
 LABEL org.label-schema.schema-version="1.0"
@@ -24,9 +28,9 @@ LABEL org.label-schema.vcs-url="https://github.com/HomeSeerLinux/docker"
 LABEL org.label-schema.vendor="Homeseer.sh"
 LABEL org.label-schema.version=$VERSION
 
-RUN echo "========================================================="
-RUN echo "  BUILDING DOCKER HOMESEER BASE ($VERSION) IMAGE FOR: $TARGETARCH"
-RUN echo "========================================================="
+RUN echo "=========================================================" && \
+    echo "  BUILDING DOCKER HOMESEER BASE ($VERSION) IMAGE FOR: $TARGETARCH" && \
+    echo "========================================================="
 
 # make sure APT packages are up to date
 RUN apt-get update && apt-get upgrade
@@ -55,11 +59,7 @@ RUN apt-get install --yes aha ffmpeg alsa-utils tmux curl wget nano flite chromi
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # copy container homeseer override scripts
-COPY homeseer/*.sh             /scripts/
-
-#COPY homeseer/restart.sh             /scripts/restart.sh
-#COPY homeseer/shutdown.sh            /scripts/shutdown.sh
-#COPY homeseer/shutdown_controller.sh /scripts/shutdown_controller.sh
+COPY homeseer/*.sh    /scripts/
 
 # copy container runtime scripts
 COPY usr/local/sbin/* /scripts/
@@ -67,13 +67,8 @@ COPY usr/local/sbin/* /scripts/
 # ensure scripts are executable
 RUN chmod a+x /scripts/*
 
-#COPY usr/local/sbin/homeseer /scripts/homeseer
-#COPY usr/local/sbin/reboot   /scripts/reboot
-#COPY usr/local/sbin/shutdown /scripts/shutdown
-#COPY usr/local/sbin/poweroff /scripts/poweroff
-
-# remove "reboot" and "shutdown" binaries for the container
-# (we will replace with scripts)
+# remove "reboot" and "shutdown" binaries from the container
+# (we will replace with symlinks to scripts)
 RUN rm -f /sbin/reboot && rm -f /sbin/shutdown
 
 # create symlinks in bin path ("/usr/local/sbin")
@@ -86,11 +81,10 @@ RUN ln -sf /scripts/homeseer /usr/local/sbin/homeseer && \
 COPY etc/avahi/avahi-daemon.conf /etc/avahi/avahi-daemon.conf
 
 # make folders for DBUS & AVAHI
-RUN mkdir -p /var/run/dbus && \
-    mkdir -p /var/run/avahi-daemon
-
 # apply folder permissions for DBUS & AVAHI
-RUN chown messagebus:messagebus /var/run/dbus && \
+RUN mkdir -p /var/run/dbus && \
+    mkdir -p /var/run/avahi-daemon && \
+    chown messagebus:messagebus /var/run/dbus && \
     chown avahi:avahi /var/run/avahi-daemon
 
 # define IP ports to be exposed by this container
