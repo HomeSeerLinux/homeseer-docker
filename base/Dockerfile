@@ -45,7 +45,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 
 # install container tools
-RUN apt-get install --yes tmux curl wget nano apt-utils net-tools iputils-ping etherwake ssh-client mosquitto-clients
+RUN apt-get install --yes tmux curl wget nano apt-utils net-tools iputils-ping etherwake ssh-client mosquitto-clients dos2unix
 
 # install HomeSeer dependencies
 # alsa-base (not available in Debian upstream)
@@ -66,6 +66,9 @@ COPY usr/local/sbin/* /scripts/
 
 # ensure scripts are executable
 RUN chmod a+x /scripts/*
+
+# ensure scripts are line-encoded for unix/linux
+RUN dos2unix /scripts/*
 
 # remove "reboot" and "shutdown" binaries from the container
 # (we will replace with symlinks to scripts)
