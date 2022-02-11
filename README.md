@@ -46,7 +46,7 @@ docker run -it --name homeseer \
 ## Getting Started 
 
 The following docker command will download and launch the latest HomeSeer 4 Docker image.
-```bash
+```shell
 docker run \
        --interactive \
        --tty \
