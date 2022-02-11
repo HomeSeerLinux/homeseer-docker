@@ -73,6 +73,61 @@ of the `/homeseer` mapped volume path prior to any upgrades.
 
 ---
 
+## Docker Compose
+
+Alternatively you can use a `docker-compose.yml` file to launch your homeseer container.
+Below is a sample `docker-compose.yml` file you can use to get started:
+
+```yaml
+# --------------------------------------------------
+# HOMESEER LINUX SERVER
+# --------------------------------------------------
+# This container hosts the HomeSeer V4 server.
+# This config will create standalone 'homeseer-data'
+# docker volume to store all homeseer runtime
+# files. (logs, config, backups, app files)
+#
+# Disclaimers:
+# --------------
+# This docker container is not supported, sponsored
+# or directly affiliated with Homeseer
+# (https://homeseer.com).
+#
+# --------------------------------------------------
+#    (Developed with ♥ by SavageSoftware, LLC.)
+# --------------------------------------------------
+version: '3.8'
+
+volumes:
+  homeseer-data:
+    name: homeseer-data
+
+services:
+  homeseer:
+    container_name: homeseer
+    image: homeseer/homeseer:latest
+    hostname: homeseer
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - 80:80
+      - 10200:10200
+      - 10300:10300
+      - 10401:10401
+      - 11000:11000
+    environment:
+      TZ: America/New_York
+      LANG: en_US.UTF-8
+    volumes:
+      - homeseer-data:/homeseer
+```
+
+
+Just run the `docker-compose up -d` command in the same directory as your `docker-compose.yml` 
+file to launch the container instance.
+
+---
+
 ## Acknowledgments
 
 Credit must be attributed to the following existing repositories and their respective authors.  Much of 
