@@ -1,7 +1,7 @@
 #########################################
 # HOMESEER (V4) LINUX - DOCKERFILE
 #########################################
-FROM mono:6.12.0.122
+FROM mono:6.12.0
 
 # build arguments
 ARG TARGETARCH
