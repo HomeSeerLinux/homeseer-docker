@@ -8,7 +8,6 @@
 ## Disclaimers
 
  -  This repository is not supported, sponsored or directly affiliated with Homeseer ([https://homeseer.com/](https://homeseer.com/)).
- -  This repository and container image are considered `EXPERIMENTAL` at this time.  
  -  We are not responsible for any data lost or systems corrupted! 
 
 ---
