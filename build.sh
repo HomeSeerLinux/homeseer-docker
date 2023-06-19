@@ -56,47 +56,55 @@ build () {
 }
 
 # previous builds (in order oldest .. latest)
-#build "4.1.2"   "https://homeseer.sh/download/archive/release/linux_4_1_2_0.tar.gz" ""  $@
-#build "4.1.3"   "https://homeseer.sh/download/archive/release/linux_4_1_3_0.tar.gz" ""  $@
-#build "4.1.4"   "https://homeseer.sh/download/archive/release/linux_4_1_4_0.tar.gz" ""  $@
-#build "4.1.5"   "https://homeseer.sh/download/archive/release/linux_4_1_5_0.tar.gz" ""  $@
-#build "4.1.6"   "https://homeseer.sh/download/archive/release/linux_4_1_6_0.tar.gz" ""  $@
-#build "4.1.7"   "https://homeseer.sh/download/archive/beta/linux_4_1_7_0.tar.gz" ""     $@
-#build "4.1.8"   "https://homeseer.sh/download/archive/beta/linux_4_1_8_0.tar.gz" ""     $@
-#build "4.1.9"   "https://homeseer.sh/download/archive/beta/linux_4_1_9_0.tar.gz" ""     $@
-#build "4.1.11"  "https://homeseer.sh/download/archive/release/linux_4_1_11_0.tar.gz" "" $@
-#build "4.1.12"  "https://homeseer.sh/download/archive/release/linux_4_1_12_0.tar.gz" "" $@
-#build "4.1.13"  "https://homeseer.sh/download/archive/release/linux_4_1_13_0.tar.gz" "" $@
-#build "4.1.14"  "https://homeseer.sh/download/archive/release/linux_4_1_14_0.tar.gz" "" $@
-#build "4.1.15"  "https://homeseer.sh/download/archive/release/linux_4_1_15_0.tar.gz" "" $@
-#build "4.1.16"  "https://homeseer.sh/download/archive/release/linux_4_1_16_0.tar.gz" "" $@
-#build "4.1.17"  "https://homeseer.sh/download/archive/release/linux_4_1_17_0.tar.gz" "" $@
-#build "4.1.18"  "https://homeseer.sh/download/archive/release/linux_4_1_18_0.tar.gz" "" $@
-#build "4.1.100" "https://homeseer.sh/download/archive/beta/linux_4_1_100_0.tar.gz" ""   $@
-#build "4.2.0"   "https://homeseer.sh/download/archive/release/linux_4_2_0_0.tar.gz" ""  $@
-#build "4.2.0.5" "https://homeseer.sh/download/archive/beta/linux_4_2_0_5.tar.gz" ""     $@
-#build "4.2.0.8" "https://homeseer.sh/download/archive/beta/linux_4_2_0_8.tar.gz" ""     $@
-#build "4.2.1"   "https://homeseer.sh/download/archive/beta/linux_4_2_1_0.tar.gz" ""     $@
-#build "4.2.2"   "https://homeseer.sh/download/archive/beta/linux_4_2_2_0.tar.gz" ""     $@
-#build "4.2.4"   "https://homeseer.sh/download/archive/beta/linux_4_2_4_0.tar.gz" ""     $@
-#build "4.2.5"   "https://homeseer.sh/download/archive/release/linux_4_2_5_0.tar.gz" ""  $@
-#build "4.2.6"   "https://homeseer.sh/download/archive/release/linux_4_2_6_0.tar.gz" ""  $@
-#build "4.2.7"   "https://homeseer.sh/download/archive/release/linux_4_2_7_0.tar.gz" ""  $@
-#build "4.2.8"   "https://homeseer.sh/download/archive/release/linux_4_2_8_0.tar.gz" ""  $@
-#build "4.2.11"  "https://homeseer.sh/download/archive/release/linux_4_2_11_0.tar.gz" "" $@
-#build "4.2.11.3" "https://homeseer.sh/download/archive/beta/linux_4_2_11_3.tar.gz"   "" $@
-#build "4.2.12"  "https://homeseer.sh/download/archive/release/linux_4_2_12_0.tar.gz" "" $@
-#build "4.2.13"  "https://homeseer.sh/download/archive/release/linux_4_2_13_0.tar.gz" "" $@
-#build "4.2.14"  "https://homeseer.sh/download/archive/release/linux_4_2_14_0.tar.gz" "" $@
-#build "4.2.15"  "https://homeseer.sh/download/archive/release/linux_4_2_15_0.tar.gz" "" $@
-#build "4.2.16"  "https://homeseer.sh/download/archive/release/linux_4_2_16_0.tar.gz" "" $@
-#build "4.2.16.7" "https://homeseer.sh/download/archive/beta/linux_4_2_16_7.tar.gz"   "" $@
-#build "4.2.17.2" "https://homeseer.sh/download/archive/beta/linux_4_2_17_2.tar.gz"   "" $@
-#build "4.2.17"  "https://homeseer.sh/download/archive/release/linux_4_2_17_0.tar.gz" "" $@
+#build "4.1.2"    "https://homeseer.sh/download/archive/release/linux_4_1_2_0.tar.gz" ""  $@
+#build "4.1.3"    "https://homeseer.sh/download/archive/release/linux_4_1_3_0.tar.gz" ""  $@
+#build "4.1.4"    "https://homeseer.sh/download/archive/release/linux_4_1_4_0.tar.gz" ""  $@
+#build "4.1.5"    "https://homeseer.sh/download/archive/release/linux_4_1_5_0.tar.gz" ""  $@
+#build "4.1.6"    "https://homeseer.sh/download/archive/release/linux_4_1_6_0.tar.gz" ""  $@
+#build "4.1.7"    "https://homeseer.sh/download/archive/beta/linux_4_1_7_0.tar.gz" ""     $@
+#build "4.1.8"    "https://homeseer.sh/download/archive/beta/linux_4_1_8_0.tar.gz" ""     $@
+#build "4.1.9"    "https://homeseer.sh/download/archive/beta/linux_4_1_9_0.tar.gz" ""     $@
+#build "4.1.11"   "https://homeseer.sh/download/archive/release/linux_4_1_11_0.tar.gz" "" $@
+#build "4.1.12"   "https://homeseer.sh/download/archive/release/linux_4_1_12_0.tar.gz" "" $@
+#build "4.1.13"   "https://homeseer.sh/download/archive/release/linux_4_1_13_0.tar.gz" "" $@
+#build "4.1.14"   "https://homeseer.sh/download/archive/release/linux_4_1_14_0.tar.gz" "" $@
+#build "4.1.15"   "https://homeseer.sh/download/archive/release/linux_4_1_15_0.tar.gz" "" $@
+#build "4.1.16"   "https://homeseer.sh/download/archive/release/linux_4_1_16_0.tar.gz" "" $@
+#build "4.1.17"   "https://homeseer.sh/download/archive/release/linux_4_1_17_0.tar.gz" "" $@
+#build "4.1.18"   "https://homeseer.sh/download/archive/release/linux_4_1_18_0.tar.gz" "" $@
+#build "4.1.100"  "https://homeseer.sh/download/archive/beta/linux_4_1_100_0.tar.gz" ""   $@
+#build "4.2.0"    "https://homeseer.sh/download/archive/release/linux_4_2_0_0.tar.gz" ""  $@
+#build "4.2.0.5"  "https://homeseer.sh/download/archive/beta/linux_4_2_0_5.tar.gz" ""     $@
+#build "4.2.0.8"  "https://homeseer.sh/download/archive/beta/linux_4_2_0_8.tar.gz" ""     $@
+#build "4.2.1"    "https://homeseer.sh/download/archive/beta/linux_4_2_1_0.tar.gz" ""     $@
+#build "4.2.2"    "https://homeseer.sh/download/archive/beta/linux_4_2_2_0.tar.gz" ""     $@
+#build "4.2.4"    "https://homeseer.sh/download/archive/beta/linux_4_2_4_0.tar.gz" ""     $@
+#build "4.2.5"    "https://homeseer.sh/download/archive/release/linux_4_2_5_0.tar.gz" ""  $@
+#build "4.2.6"    "https://homeseer.sh/download/archive/release/linux_4_2_6_0.tar.gz" ""  $@
+#build "4.2.7"    "https://homeseer.sh/download/archive/release/linux_4_2_7_0.tar.gz" ""  $@
+#build "4.2.8"    "https://homeseer.sh/download/archive/release/linux_4_2_8_0.tar.gz" ""  $@
+#build "4.2.11"   "https://homeseer.sh/download/archive/release/linux_4_2_11_0.tar.gz" "" $@
+#build "4.2.11.3" "https://homeseer.sh/download/archive/beta/linux_4_2_11_3.tar.gz"   ""  $@
+#build "4.2.12"   "https://homeseer.sh/download/archive/release/linux_4_2_12_0.tar.gz" "" $@
+#build "4.2.13"   "https://homeseer.sh/download/archive/release/linux_4_2_13_0.tar.gz" "" $@
+#build "4.2.14"   "https://homeseer.sh/download/archive/release/linux_4_2_14_0.tar.gz" "" $@
+#build "4.2.15"   "https://homeseer.sh/download/archive/release/linux_4_2_15_0.tar.gz" "" $@
+#build "4.2.16"   "https://homeseer.sh/download/archive/release/linux_4_2_16_0.tar.gz" "" $@
+#build "4.2.16.7" "https://homeseer.sh/download/archive/beta/linux_4_2_16_7.tar.gz"   ""  $@
+#build "4.2.17"   "https://homeseer.sh/download/archive/release/linux_4_2_17_0.tar.gz" "" $@
+#build "4.2.17.2" "https://homeseer.sh/download/archive/beta/linux_4_2_17_2.tar.gz"   ""  $@
+#build "4.2.17.4" "https://homeseer.sh/download/archive/beta/linux_4_2_17_4.tar.gz" ""    $@
 #build "4.2.18.3" "https://homeseer.sh/download/archive/release/linux_4_2_18_3.tar.gz" "" $@
+#build "4.2.18.5" "https://homeseer.sh/download/archive/release/linux_4_2_18_5.tar.gz" "" $@
+#build "4.2.18.8" "https://homeseer.sh/download/archive/beta/linux_4_2_18_8.tar.gz" ""    $@
+#build "4.2.18.9" "https://homeseer.sh/download/archive/beta/linux_4_2_18_9.tar.gz" ""    $@
+#build "4.2.18.12" "https://homeseer.sh/download/archive/beta/linux_4_2_18_12.tar.gz" ""  $@
+#build "4.2.18.18" "https://homeseer.sh/download/archive/beta/linux_4_2_18_18.tar.gz" ""  $@
+#build "4.2.18.19" "https://homeseer.sh/download/archive/beta/linux_4_2_18_19.tar.gz" ""  $@
+#build "4.2.18.20" "https://homeseer.sh/download/archive/beta/linux_4_2_18_20.tar.gz" ""  $@
 
 # latest beta build
-build "4.2.17.4" "https://homeseer.sh/download/archive/beta/linux_4_2_17_4.tar.gz" "--tag homeseer/homeseer:beta" $@
+build "4.2.18.21" "https://homeseer.sh/download/archive/beta/linux_4_2_18_21.tar.gz" "--tag homeseer/homeseer:beta" $@
 
 # latest release build
 build "4.2.18.5"  "https://homeseer.sh/download/archive/release/linux_4_2_18_5.tar.gz" "--tag homeseer/homeseer:latest" $@

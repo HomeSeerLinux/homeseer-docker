@@ -33,7 +33,7 @@ RUN echo "=========================================================" && \
     echo "========================================================="
 
 # make sure APT packages are up to date
-RUN apt-get update && apt-get upgrade
+RUN apt-get update && apt-get upgrade --yes
 
 # set non-interactive frontend
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
