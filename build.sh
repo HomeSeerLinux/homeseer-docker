@@ -102,9 +102,10 @@ build () {
 #build "4.2.18.18" "https://homeseer.sh/download/archive/beta/linux_4_2_18_18.tar.gz" ""  $@
 #build "4.2.18.19" "https://homeseer.sh/download/archive/beta/linux_4_2_18_19.tar.gz" ""  $@
 #build "4.2.18.20" "https://homeseer.sh/download/archive/beta/linux_4_2_18_20.tar.gz" ""  $@
+#build "4.2.18.21" "https://homeseer.sh/download/archive/beta/linux_4_2_18_21.tar.gz" ""  $@
 
 # latest beta build
-build "4.2.18.21" "https://homeseer.sh/download/archive/beta/linux_4_2_18_21.tar.gz" "--tag homeseer/homeseer:beta" $@
+build "4.2.18.29" "https://homeseer.sh/download/archive/beta/linux_4_2_18_29.tar.gz" "--tag homeseer/homeseer:beta" $@
 
 # latest release build
 build "4.2.18.5"  "https://homeseer.sh/download/archive/release/linux_4_2_18_5.tar.gz" "--tag homeseer/homeseer:latest" $@
