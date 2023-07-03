@@ -108,4 +108,4 @@ build () {
 build "4.2.18.29" "https://homeseer.sh/download/archive/beta/linux_4_2_18_29.tar.gz" "--tag homeseer/homeseer:beta" $@
 
 # latest release build
-build "4.2.18.5"  "https://homeseer.sh/download/archive/release/linux_4_2_18_5.tar.gz" "--tag homeseer/homeseer:latest" $@
+build "4.2.19.0"  "https://homeseer.sh/download/archive/release/linux_4_2_19_0.tar.gz" "--tag homeseer/homeseer:latest" $@
