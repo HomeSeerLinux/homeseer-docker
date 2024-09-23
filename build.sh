@@ -103,10 +103,22 @@ build () {
 #build "4.2.18.19" "https://homeseer.sh/download/archive/beta/linux_4_2_18_19.tar.gz" ""  $@
 #build "4.2.18.20" "https://homeseer.sh/download/archive/beta/linux_4_2_18_20.tar.gz" ""  $@
 #build "4.2.18.21" "https://homeseer.sh/download/archive/beta/linux_4_2_18_21.tar.gz" ""  $@
+#build "4.2.18.29" "https://homeseer.sh/download/archive/beta/linux_4_2_18_29.tar.gz" "" $@
 #build "4.2.19.0"  "https://homeseer.sh/download/archive/release/linux_4_2_19_0.tar.gz" "" $@
+#build "4.2.19.1"  "https://homeseer.sh/download/archive/beta/linux_4_2_19_1.tar.gz" "" $@
+#build "4.2.19.4"  "https://homeseer.sh/download/archive/beta/linux_4_2_19_4.tar.gz" "" $@
+#build "4.2.19.5"  "https://homeseer.sh/download/archive/release/linux_4_2_19_5.tar.gz" "" $@
+#build "4.2.19.9"  "https://homeseer.sh/download/archive/beta/linux_4_2_19_9.tar.gz" "" $@
+#build "4.2.20.0"  "https://homeseer.sh/download/archive/release/linux_4_2_20_0.tar.gz" "" $@
+#build "4.2.20.6"  "https://homeseer.sh/download/archive/beta/linux_4_2_20_6.tar.gz" "" $@
+#build "4.2.20.7"  "https://homeseer.sh/download/archive/beta/linux_4_2_20_7.tar.gz" "" $@
+#build "4.2.20.9"  "https://homeseer.sh/download/archive/beta/linux_4_2_20_9.tar.gz" "" $@
+#build "4.2.20.11" "https://homeseer.sh/download/archive/beta/linux_4_2_20_11.tar.gz" "" $@
+#build "4.2.20.12" "https://homeseer.sh/download/archive/beta/linux_4_2_20_12.tar.gz" "" $@
+#build "4.2.21.0"  "https://homeseer.sh/download/archive/release/linux_4_2_21_0.tar.gz" "" $@
 
 # latest beta build
-build "4.2.18.29" "https://homeseer.sh/download/archive/beta/linux_4_2_18_29.tar.gz" "--tag homeseer/homeseer:beta" $@
+build "4.2.20.13" "https://homeseer.sh/download/archive/beta/linux_4_2_20_13.tar.gz" "--tag homeseer/homeseer:beta" $@
 
 # latest release build
-build "4.2.19.5"  "https://homeseer.sh/download/archive/release/linux_4_2_19_5.tar.gz" "--tag homeseer/homeseer:latest" $@
+build "4.2.21.2"  "https://homeseer.sh/download/archive/release/linux_4_2_21_2.tar.gz" "--tag homeseer/homeseer:latest" $@
